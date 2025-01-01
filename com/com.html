@@ -1,12 +1,30 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>Blocs 1.9.4</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="icon" href="../img/1.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div><img class="logo" src="img/1.png"></div>
+        <div class="links">
+            <a href="../index.html">Accueil</a>
+            <a href="../base/base.html">Blocs de base</a>
+            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
+            <a href="../min/min.html">Blocs de minerais</a>
+            <a href="../const/const.html">Blocs de construction</a>
+            <a href="../dec/dec.html">Blocs décoratifs</a>
+            <a href="../mec/mec.html">Blocs mécaniques</a>
+            <a href="../nat/nat.html">Blocs naturels</a>
+            <a href="../red/red.html">Blocs de redstone</a>
+            <a href="../deco/deco.html">Blocs de décoration</a>
+            <a href="../div/div.html">Blocs divers</a>
+            <a href="../com/com.html">Commentaire</a>
+        </div>
+    </nav>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -89,49 +107,17 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div><img class="logo" src="img/1.png" alt="Logo"></div>
-        <div class="links">
-            <a href="../index.html">Accueil</a>
-            <a href="../base/base.html">Blocs de base</a>
-            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
-            <a href="../min/min.html">Blocs de minerais</a>
-            <a href="../const/const.html">Blocs de construction</a>
-            <a href="../dec/dec.html">Blocs décoratifs</a>
-            <a href="../mec/mec.html">Blocs mécaniques</a>
-            <a href="../nat/nat.html">Blocs naturels</a>
-            <a href="../red/red.html">Blocs de redstone</a>
-            <a href="../deco/deco.html">Blocs de décoration</a>
-            <a href="../div/div.html">Blocs divers</a>
-            <a href="../com/com.html">Commentaire</a>
-        </div>
-    </nav>
 
     <div class="comment-section">
         <h2>Écrire un Commentaire</h2>
+
+        <!-- Formulaire de commentaire -->
         <div class="comment-form">
             <textarea id="comment-text" placeholder="Écrivez votre commentaire ici..."></textarea>
             <button onclick="submitComment()">Soumettre le Commentaire</button>
         </div>
-        <script>
-           function submitComment() {
-               // Get the comment text
-               const commentText = document.getElementById('comment-text').value;
 
-               //  Do something with the comment, e.g., send it to a server
-               console.log("Comment submitted:", commentText);
-
-               // Clear the textarea (optional)
-               document.getElementById('comment-text').value = '';
-
-               // Example of adding to the comment list (you'll likely need more sophisticated logic):
-               const commentList = document.getElementById('comment-list');
-               const newComment = document.createElement('p');
-               newComment.textContent = commentText;
-               commentList.appendChild(newComment);
-
-           }
-       </script>
+        <!-- Liste des commentaires -->
         <div class="comment-list" id="comment-list"></div>
     </div>
 
@@ -140,95 +126,106 @@
         <button onclick="validatePassword()">Valider</button>
     </div>
 
-    <!-- Scripts Firebase et JavaScript -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+    <script>
+        const adminPassword = "valitymdp"; 
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyALfZqZZZwOZVRzB8ZtJ05tD4ZshWLBfMg",
-            authDomain: "blocs-f21c0.firebaseapp.com",
-            projectId: "blocs-f21c0",
-            storageBucket: "blocs-f21c0.appspot.com",
-            messagingSenderId: "952216555812",
-            appId: "1:952216555812:web:a37cdb673625845d0e23b1",
-            measurementId: "G-JEYF5WZCTT"
+        // Charger les commentaires au démarrage de la page
+        window.onload = function() {
+            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+            savedComments.forEach((comment, index) => {
+                displayComment(comment, index, false); // Afficher sans bouton de suppression par défaut
+            });
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const adminPassword = "secret123";
-
-        async function submitComment() {
+        // Fonction pour soumettre un commentaire
+        function submitComment() {
             const commentText = document.getElementById('comment-text').value;
+
             if (commentText.trim() !== "") {
-                try {
-                    const newComment = { author: "Utilisateur Anonyme", text: commentText };
-                    const docRef = await addDoc(collection(db, "comments"), newComment);
-                    displayComment(newComment, docRef.id, false);
-                    document.getElementById('comment-text').value = "";
-                } catch (error) {
-                    console.error("Erreur lors de l'ajout du commentaire : ", error);
-                }
+                // Créer un commentaire
+                const newComment = {
+                    author: "Utilisateur Anonyme",
+                    text: commentText
+                };
+
+                // Ajouter le commentaire à LocalStorage
+                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+                savedComments.push(newComment);
+                localStorage.setItem('comments', JSON.stringify(savedComments));
+
+                // Afficher le commentaire immédiatement
+                displayComment(newComment, savedComments.length - 1, false); // Pas de suppression avant validation du mot de passe
+
+                // Vider le champ de texte après soumission
+                document.getElementById('comment-text').value = "";
             } else {
                 alert("Veuillez écrire un commentaire avant de soumettre.");
             }
         }
 
-        async function loadComments() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "comments"));
-                querySnapshot.forEach(doc => {
-                    displayComment(doc.data(), doc.id, false);
-                });
-            } catch (error) {
-                console.error("Erreur lors du chargement des commentaires : ", error);
-            }
-        }
-
-        function displayComment(comment, commentId, canDelete) {
+        // Fonction pour afficher un commentaire dans la liste
+        function displayComment(comment, index, canDelete) {
             const commentDiv = document.createElement('div');
             commentDiv.classList.add('comment');
+
             const author = document.createElement('div');
             author.classList.add('author');
             author.textContent = comment.author;
+
             const text = document.createElement('div');
             text.classList.add('text');
             text.textContent = comment.text;
+
+            // Si le propriétaire a validé le mot de passe, ajouter le bouton de suppression
             if (canDelete) {
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Supprimer';
-                deleteButton.onclick = function () {
-                    deleteComment(commentId);
+                deleteButton.onclick = function() {
+                    deleteComment(index);
                 };
                 commentDiv.appendChild(deleteButton);
             }
+
             commentDiv.appendChild(author);
             commentDiv.appendChild(text);
+
             document.getElementById('comment-list').appendChild(commentDiv);
         }
 
-        async function deleteComment(commentId) {
-            try {
-                await deleteDoc(doc(db, "comments", commentId));
-                alert("Commentaire supprimé !");
-                document.getElementById('comment-list').innerHTML = "";
-                loadComments();
-            } catch (error) {
-                console.error("Erreur lors de la suppression du commentaire : ", error);
-            }
-        }
-
+        // Fonction pour valider le mot de passe avant de permettre la suppression
         function validatePassword() {
             const enteredPassword = document.getElementById('admin-password').value;
+
             if (enteredPassword === adminPassword) {
-                alert("Accès autorisé.");
+                // Si le mot de passe est correct, autoriser la suppression des commentaires
+                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+                document.getElementById('comment-list').innerHTML = ''; // Réinitialiser la liste
+
+                savedComments.forEach((comment, index) => {
+                    displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
+                });
+
+                alert("Accès autorisé à la suppression des commentaires.");
             } else {
                 alert("Mot de passe incorrect.");
             }
         }
 
-        window.onload = loadComments;
+        // Fonction pour supprimer un commentaire
+        function deleteComment(index) {
+            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+            savedComments.splice(index, 1); // Supprimer le commentaire du tableau
+
+            // Sauvegarder les commentaires modifiés dans le localStorage
+            localStorage.setItem('comments', JSON.stringify(savedComments));
+
+            // Recharger les commentaires pour mettre à jour l'affichage
+            document.getElementById('comment-list').innerHTML = '';
+            savedComments.forEach((comment, index) => {
+                displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
+            });
+        }
     </script>
+
 </body>
 </html>
