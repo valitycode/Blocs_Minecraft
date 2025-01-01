@@ -126,12 +126,11 @@
         <button onclick="validatePassword()">Valider</button>
     </div>
 
-    <!-- Scripts Firebase et JavaScript -->
+        <!-- Scripts Firebase et JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
-
-        // Configuration Firebase
+    
         const firebaseConfig = {
             apiKey: "AIzaSyALfZqZZZwOZVRzB8ZtJ05tD4ZshWLBfMg",
             authDomain: "blocs-f21c0.firebaseapp.com",
@@ -141,23 +140,15 @@
             appId: "1:952216555812:web:a37cdb673625845d0e23b1",
             measurementId: "G-JEYF5WZCTT"
         };
-
-        // Initialisation Firebase
+    
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        // Mot de passe pour la suppression
+    
         const adminPassword = "secret123";
-
-        // Charger les commentaires au démarrage
-        window.onload = function() {
-            loadComments();
-        };
-
-        // Fonction pour soumettre un commentaire
+    
         async function submitComment() {
             const commentText = document.getElementById('comment-text').value;
-
+    
             if (commentText.trim() !== "") {
                 try {
                     const newComment = {
@@ -165,7 +156,7 @@
                         text: commentText,
                         timestamp: new Date().toISOString()
                     };
-
+    
                     const docRef = await addDoc(collection(db, "comments"), newComment);
                     displayComment(newComment, docRef.id, false);
                     document.getElementById('comment-text').value = ""; // Vider le champ après soumission
@@ -176,8 +167,7 @@
                 alert("Veuillez écrire un commentaire avant de soumettre.");
             }
         }
-
-        // Fonction pour charger les commentaires
+    
         async function loadComments() {
             try {
                 const querySnapshot = await getDocs(collection(db, "comments"));
@@ -188,21 +178,19 @@
                 console.error("Erreur lors du chargement des commentaires : ", error);
             }
         }
-
-        // Fonction pour afficher un commentaire
+    
         function displayComment(comment, commentId, canDelete) {
             const commentDiv = document.createElement('div');
             commentDiv.classList.add('comment');
-
+    
             const author = document.createElement('div');
             author.classList.add('author');
             author.textContent = comment.author;
-
+    
             const text = document.createElement('div');
             text.classList.add('text');
             text.textContent = comment.text;
-
-            // Si l'utilisateur est autorisé, ajouter le bouton de suppression
+    
             if (canDelete) {
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Supprimer';
@@ -211,16 +199,15 @@
                 };
                 commentDiv.appendChild(deleteButton);
             }
-
+    
             commentDiv.appendChild(author);
             commentDiv.appendChild(text);
             document.getElementById('comment-list').appendChild(commentDiv);
         }
-
-        // Fonction pour valider le mot de passe
+    
         function validatePassword() {
             const enteredPassword = document.getElementById('admin-password').value;
-
+    
             if (enteredPassword === adminPassword) {
                 alert("Accès autorisé à la suppression des commentaires.");
                 document.querySelectorAll('.comment').forEach(comment => {
@@ -233,8 +220,7 @@
                 alert("Mot de passe incorrect.");
             }
         }
-
-        // Fonction pour supprimer un commentaire
+    
         async function deleteComment(commentId) {
             try {
                 await deleteDoc(doc(db, "comments", commentId));
@@ -245,6 +231,17 @@
                 console.error("Erreur lors de la suppression du commentaire : ", error);
             }
         }
+    
+        // Charger les commentaires au démarrage
+        window.onload = function() {
+            loadComments();
+        };
+    
+        // Rendre les fonctions accessibles dans le contexte global
+        window.submitComment = submitComment;
+        window.validatePassword = validatePassword;
+        window.deleteComment = deleteComment;
     </script>
+
 </body>
 </html>
