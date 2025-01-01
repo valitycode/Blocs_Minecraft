@@ -1,0 +1,130 @@
+/* Réinitialisation des marges et police globale */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;  /* Fond léger pour contraster avec la barre de navigation */
+}
+
+/* Style de la barre de navigation */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 0.8em 2em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Ombre douce pour un effet 3D */
+}
+
+/* Style du logo */
+.navbar .logo {
+    width: 20%;
+    transition: transform 0.3s ease;  /* Animation de survol du logo */
+}
+
+.navbar .logo:hover {
+    transform: scale(1.1);  /* Effet de zoom du logo */
+}
+
+/* Liens de navigation */
+.navbar .links {
+    display: flex;
+    gap: 1.5em;  /* Espace uniforme entre les liens */
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    padding: 0.6em 1em;
+    border-radius: 8px;  /* Coins arrondis pour les liens */
+    transition: background-color 0.3s, transform 0.2s;  /* Animation lors du survol */
+}
+
+/* Effet au survol des liens */
+.navbar a:hover {
+    background-color: #444;
+    transform: translateY(-2px);  /* Légère remontée du lien lors du survol */
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Évite les espaces entre les bordures */
+    margin: 20px 0;
+}
+th, td {
+    border: 1px solid #ddd; /* Bordures grises */
+    padding: 8px;
+    text-align: left; /* Alignement du texte à gauche */
+}
+th {
+    background-color: #f4f4f4; /* Fond pour les en-têtes */
+    font-weight: bold;
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Fond différent pour les lignes paires */
+}
+tr:hover {
+    background-color: #f1f1f1; /* Surbrillance au survol */
+}
+
+button {
+    padding: 6px 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Ajouter des styles pour les petits écrans (responsivité) */
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1em 2em;
+    }
+
+    .navbar .links {
+        flex-direction: column;
+        gap: 1em;
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .navbar a {
+        width: 100%;
+        text-align: left;
+        padding: 1em 0;
+    }
+}

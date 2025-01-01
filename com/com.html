@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Blocs 1.9.4</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/1.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div><img class="logo" src="img/1.png"></div>
+        <div class="links">
+            <a href="../index.html">Accueil</a>
+            <a href="../base/base.html">Blocs de base</a>
+            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
+            <a href="../min/min.html">Blocs de minerais</a>
+            <a href="../const/const.html">Blocs de construction</a>
+            <a href="../dec/dec.html">Blocs décoratifs</a>
+            <a href="../mec/mec.html">Blocs mécaniques</a>
+            <a href="../nat/nat.html">Blocs naturels</a>
+            <a href="../red/red.html">Blocs de redstone</a>
+            <a href="../deco/deco.html">Blocs de décoration</a>
+            <a href="../div/div.html">Blocs divers</a>
+            <a href="../com/com.html">Commentaire</a>
+        </div>
+    </nav>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .comment-section {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+        .comment-section h2 {
+            text-align: center;
+        }
+        .comment-form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .comment-form textarea {
+            resize: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            height: 100px;
+        }
+        .comment-form button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .comment-form button:hover {
+            background-color: #45a049;
+        }
+        .comment-list {
+            margin-top: 20px;
+        }
+        .comment {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .comment .author {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .comment .text {
+            font-size: 16px;
+        }
+        .comment button {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .comment button:hover {
+            background-color: #cc0000;
+        }
+        .password-form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .password-form input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="comment-section">
+        <h2>Écrire un Commentaire</h2>
+
+        <!-- Formulaire de commentaire -->
+        <div class="comment-form">
+            <textarea id="comment-text" placeholder="Écrivez votre commentaire ici..."></textarea>
+            <button onclick="submitComment()">Soumettre le Commentaire</button>
+        </div>
+
+        <!-- Liste des commentaires -->
+        <div class="comment-list" id="comment-list"></div>
+    </div>
+
+    <div class="password-form">
+        <input type="password" id="admin-password" placeholder="Entrez le mot de passe pour supprimer">
+        <button onclick="validatePassword()">Valider</button>
+    </div>
+
+    <script>
+        const adminPassword = "valitymdp"; 
+
+        // Charger les commentaires au démarrage de la page
+        window.onload = function() {
+            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+            savedComments.forEach((comment, index) => {
+                displayComment(comment, index, false); // Afficher sans bouton de suppression par défaut
+            });
+        };
+
+        // Fonction pour soumettre un commentaire
+        function submitComment() {
+            const commentText = document.getElementById('comment-text').value;
+
+            if (commentText.trim() !== "") {
+                // Créer un commentaire
+                const newComment = {
+                    author: "Utilisateur Anonyme",
+                    text: commentText
+                };
+
+                // Ajouter le commentaire à LocalStorage
+                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+                savedComments.push(newComment);
+                localStorage.setItem('comments', JSON.stringify(savedComments));
+
+                // Afficher le commentaire immédiatement
+                displayComment(newComment, savedComments.length - 1, false); // Pas de suppression avant validation du mot de passe
+
+                // Vider le champ de texte après soumission
+                document.getElementById('comment-text').value = "";
+            } else {
+                alert("Veuillez écrire un commentaire avant de soumettre.");
+            }
+        }
+
+        // Fonction pour afficher un commentaire dans la liste
+        function displayComment(comment, index, canDelete) {
+            const commentDiv = document.createElement('div');
+            commentDiv.classList.add('comment');
+
+            const author = document.createElement('div');
+            author.classList.add('author');
+            author.textContent = comment.author;
+
+            const text = document.createElement('div');
+            text.classList.add('text');
+            text.textContent = comment.text;
+
+            // Si le propriétaire a validé le mot de passe, ajouter le bouton de suppression
+            if (canDelete) {
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Supprimer';
+                deleteButton.onclick = function() {
+                    deleteComment(index);
+                };
+                commentDiv.appendChild(deleteButton);
+            }
+
+            commentDiv.appendChild(author);
+            commentDiv.appendChild(text);
+
+            document.getElementById('comment-list').appendChild(commentDiv);
+        }
+
+        // Fonction pour valider le mot de passe avant de permettre la suppression
+        function validatePassword() {
+            const enteredPassword = document.getElementById('admin-password').value;
+
+            if (enteredPassword === adminPassword) {
+                // Si le mot de passe est correct, autoriser la suppression des commentaires
+                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+                document.getElementById('comment-list').innerHTML = ''; // Réinitialiser la liste
+
+                savedComments.forEach((comment, index) => {
+                    displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
+                });
+
+                alert("Accès autorisé à la suppression des commentaires.");
+            } else {
+                alert("Mot de passe incorrect.");
+            }
+        }
+
+        // Fonction pour supprimer un commentaire
+        function deleteComment(index) {
+            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+            savedComments.splice(index, 1); // Supprimer le commentaire du tableau
+
+            // Sauvegarder les commentaires modifiés dans le localStorage
+            localStorage.setItem('comments', JSON.stringify(savedComments));
+
+            // Recharger les commentaires pour mettre à jour l'affichage
+            document.getElementById('comment-list').innerHTML = '';
+            savedComments.forEach((comment, index) => {
+                displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
+            });
+        }
+    </script>
+
+</body>
+</html>

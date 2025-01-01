@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Blocs 1.9.4</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/1.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div><img class="logo" src="img/1.png"></div>
+        <div class="links">
+            <a href="../index.html">Accueil</a>
+            <a href="../base/base.html">Blocs de base</a>
+            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
+            <a href="../min/min.html">Blocs de minerais</a>
+            <a href="../const/const.html">Blocs de construction</a>
+            <a href="../dec/dec.html">Blocs décoratifs</a>
+            <a href="../mec/mec.html">Blocs mécaniques</a>
+            <a href="../nat/nat.html">Blocs naturels</a>
+            <a href="../red/red.html">Blocs de redstone</a>
+            <a href="../deco/deco.html">Blocs de décoration</a>
+            <a href="../div/div.html">Blocs divers</a>
+            <a href="../com/com.html">Commentaire</a>
+        </div>
+    </nav>
+    <table id="copie">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>ID</th>
+                <th>Commande WorldEdit</th>
+                <th>Copie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Bûche de Chêne</td>
+                <td>17:0</td>
+                <td>//set 17:0</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Bûche de Sapin</td>
+                <td>17:1</td>
+                <td>//set 17:1</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Bûche de Bouleau</td>
+                <td>17:2</td>
+                <td>//set 17:2</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Bûche de Jungle</td>
+                <td>17:3</td>
+                <td>//set 17:3</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Bûche d'Acacia</td>
+                <td>162:0</td>
+                <td>//set 162:0</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Bûche de Chêne Noir</td>
+                <td>1:4</td>
+                <td>//set 1:4</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Feuilles de Chêne</td>
+                <td>18:0</td>
+                <td>//set 18:0</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Feuilles de Sapin</td>
+                <td>18:1</td>
+                <td>//set 18:1</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Feuilles de Bouleau</td>
+                <td>18:2</td>
+                <td>//set 18:2</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Feuilles de Jungle</td>
+                <td>18:3</td>
+                <td>//set 18:3</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Feuilles d'Acacia</td>
+                <td>161:0</td>
+                <td>//set 161:0</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Feuilles de Chêne Noir</td>
+                <td>161:1</td>
+                <td>//set 161:1</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function copyThirdColumn(button) {
+            // Trouver la ligne parente du bouton
+            const row = button.closest('tr');
+            // Récupérer la cellule de la 3ème colonne
+            const cell = row.cells[2]; // Les cellules de la ligne sont accessibles via row.cells
+            // Obtenir le texte de la cellule
+            const textToCopy = cell.textContent.trim();
+
+            // Copier le texte dans le presse-papier
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert(`Texte copié : ${textToCopy}`);
+            }).catch(err => {
+                alert('Erreur lors de la copie : ' + err);
+            });
+        }
+    </script>
+</html>

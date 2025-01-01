@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Blocs 1.9.4</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/1.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div><img class="logo" src="img/1.png"></div>
+        <div class="links">
+            <a href="../index.html">Accueil</a>
+            <a href="base.html">Blocs de base</a>
+            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
+            <a href="../min/min.html">Blocs de minerais</a>
+            <a href="../const/const.html">Blocs de construction</a>
+            <a href="../dec/dec.html">Blocs décoratifs</a>
+            <a href="../mec/mec.html">Blocs mécaniques</a>
+            <a href="../nat/nat.html">Blocs naturels</a>
+            <a href="../red/red.html">Blocs de redstone</a>
+            <a href="../deco/deco.html">Blocs de décoration</a>
+            <a href="../div/div.html">Blocs divers</a>
+            <a href="../com/com.html">Commentaire</a>
+        </div>
+    </nav>
+    <table id="copie">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>ID</th>
+                <th>Commande WorldEdit</th>
+                <th>Copie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Air</td>
+                <td>0</td>
+                <td>//set 0</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Pierre</td>
+                <td>1</td>
+                <td>//set 1</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Granit</td>
+                <td>1:1</td>
+                <td>//set 1:1</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Granit Poli</td>
+                <td>1:2</td>
+                <td>//set 1:2</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Diorite</td>
+                <td>1:3</td>
+                <td>//set 1:3</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Diorite Polie</td>
+                <td>1:4</td>
+                <td>//set 1:4</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Andesite</td>
+                <td>1:5</td>
+                <td>//set 1:5</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Andesite Polie</td>
+                <td>1:6</td>
+                <td>//set 1:6</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Herbe</td>
+                <td>2</td>
+                <td>//set 2</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Terre</td>
+                <td>3</td>
+                <td>//set 3</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Terre Stérile</td>
+                <td>3:1</td>
+                <td>//set 3:1</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Podzol</td>
+                <td>3:2</td>
+                <td>//set 3:2</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Roche</td>
+                <td>4</td>
+                <td>//set 4</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Sable</td>
+                <td>12</td>
+                <td>//set 12</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Sable rouge</td>
+                <td>12:1</td>
+                <td>//set 12:1</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Gravier</td>
+                <td>13</td>
+                <td>//set 13</td>
+                <td>
+                    <button onclick="copyThirdColumn(this)">Copier</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function copyThirdColumn(button) {
+            // Trouver la ligne parente du bouton
+            const row = button.closest('tr');
+            // Récupérer la cellule de la 3ème colonne
+            const cell = row.cells[2]; // Les cellules de la ligne sont accessibles via row.cells
+            // Obtenir le texte de la cellule
+            const textToCopy = cell.textContent.trim();
+
+            // Copier le texte dans le presse-papier
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert(`Texte copié : ${textToCopy}`);
+            }).catch(err => {
+                alert('Erreur lors de la copie : ' + err);
+            });
+        }
+    </script>
+</html>

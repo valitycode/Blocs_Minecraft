@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Blocs 1.9.4</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/1.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div><img class="logo" src="img/1.png"></div>
+        <div class="links">
+            <a href="../index.html">Accueil</a>
+            <a href="../base/base.html">Blocs de base</a>
+            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
+            <a href="../min/min.html">Blocs de minerais</a>
+            <a href="../const/const.html">Blocs de construction</a>
+            <a href="../dec/dec.html">Blocs décoratifs</a>
+            <a href="../mec/mec.html">Blocs mécaniques</a>
+            <a href="../nat/nat.html">Blocs naturels</a>
+            <a href="../red/red.html">Blocs de redstone</a>
+            <a href="../deco/deco.html">Blocs de décoration</a>
+            <a href="../div/div.html">Blocs divers</a>
+            <a href="../com/com.html">Commentaire</a>
+        </div>
+    </nav>
+    <table id="copie">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>ID</th>
+                <th>Commande WorldEdit</th>
+                <th>Copie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Rail classique</td>
+                <td>66</td>
+                <td>//set 66</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Rail propulseur</td>
+                <td>27</td>
+                <td>//set 27</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Rail détecteur</td>
+                <td>28</td>
+                <td>//set 28</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Rail activé</td>
+                <td>66 (selon direction)</td>
+                <td>//set 66</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Levier</td>
+                <td>69</td>
+                <td>//set 69</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Bouton en pierre</td>
+                <td>77</td>
+                <td>//set 77</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Bouton en bois</td>
+                <td>143</td>
+                <td>//set 143</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Plaque de pression en pierre</td>
+                <td>70</td>
+                <td>//set 70</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Plaque de pression en bois</td>
+                <td>72</td>
+                <td>//set 72</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Plaque de pression lourde (fer)</td>
+                <td>147</td>
+                <td>//set 147</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Plaque de pression légère (or)</td>
+                <td>148</td>
+                <td>//set 148</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Trappe</td>
+                <td>96</td>
+                <td>//set 96</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Trappe en fer</td>
+                <td>167</td>
+                <td>//set 167</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function copyThirdColumn(button) {
+            // Trouver la ligne parente du bouton
+            const row = button.closest('tr');
+            // Récupérer la cellule de la 3ème colonne
+            const cell = row.cells[2]; // Les cellules de la ligne sont accessibles via row.cells
+            // Obtenir le texte de la cellule
+            const textToCopy = cell.textContent.trim();
+
+            // Copier le texte dans le presse-papier
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert(`Texte copié : ${textToCopy}`);
+            }).catch(err => {
+                alert('Erreur lors de la copie : ' + err);
+            });
+        }
+    </script>
+</html>

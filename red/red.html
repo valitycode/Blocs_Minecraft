@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Blocs 1.9.4</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="../img/1.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div><img class="logo" src="img/1.png"></div>
+        <div class="links">
+            <a href="../index.html">Accueil</a>
+            <a href="../base/base.html">Blocs de base</a>
+            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
+            <a href="../min/min.html">Blocs de minerais</a>
+            <a href="../const/const.html">Blocs de construction</a>
+            <a href="../dec/dec.html">Blocs décoratifs</a>
+            <a href="../mec/mec.html">Blocs mécaniques</a>
+            <a href="../nat/nat.html">Blocs naturels</a>
+            <a href="../red/red.html">Blocs de redstone</a>
+            <a href="../deco/deco.html">Blocs de décoration</a>
+            <a href="../div/div.html">Blocs divers</a>
+            <a href="../com/com.html">Commentaire</a>
+        </div>
+    </nav>
+    <table id="copie">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>ID</th>
+                <th>Commande WorldEdit</th>
+                <th>Copie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Poudre de redstone</td>
+                <td>331 (objet)</td>
+                <td>//set 331</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Torche de redstone</td>
+                <td>76</td>
+                <td>//set 76</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Bloc de redstone</td>
+                <td>152</td>
+                <td>//set 152</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Répéteur</td>
+                <td>93</td>
+                <td>//set 93</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Comparateur</td>
+                <td>149</td>
+                <td>//set 149</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Lampe de redstone</td>
+                <td>123</td>
+                <td>//set 123</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Lampe de redstone (active)</td>
+                <td>124</td>
+                <td>//set 124</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Piston</td>
+                <td>33</td>
+                <td>//set 33</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Piston collant</td>
+                <td>29</td>
+                <td>//set 29</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Distributeur</td>
+                <td>23</td>
+                <td>//set 23</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Dropper</td>
+                <td>158</td>
+                <td>//set 158</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Observateur</td>
+                <td>Pas encore dans la 1.9</td>
+                <td>-</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+            <tr>
+                <td>Bloc de slime</td>
+                <td>165</td>
+                <td>//set 165</td>
+                <td><button onclick="copyThirdColumn(this)">Copier</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function copyThirdColumn(button) {
+            // Trouver la ligne parente du bouton
+            const row = button.closest('tr');
+            // Récupérer la cellule de la 3ème colonne
+            const cell = row.cells[2]; // Les cellules de la ligne sont accessibles via row.cells
+            // Obtenir le texte de la cellule
+            const textToCopy = cell.textContent.trim();
+
+            // Copier le texte dans le presse-papier
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert(`Texte copié : ${textToCopy}`);
+            }).catch(err => {
+                alert('Erreur lors de la copie : ' + err);
+            });
+        }
+    </script>
+</html>
