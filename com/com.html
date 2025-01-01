@@ -126,16 +126,13 @@
         <button onclick="validatePassword()">Valider</button>
     </div>
 
-     <script type="module">
-          // Import the functions you need from the SDKs you need
-          import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-          import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
-          // TODO: Add SDKs for Firebase products that you want to use
-          // https://firebase.google.com/docs/web/setup#available-libraries
-    
-          // Your web app's Firebase configuration
-          // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-          const firebaseConfig = {
+    <!-- Scripts Firebase et JavaScript -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+
+        // Configuration Firebase
+        const firebaseConfig = {
             apiKey: "AIzaSyALfZqZZZwOZVRzB8ZtJ05tD4ZshWLBfMg",
             authDomain: "blocs-f21c0.firebaseapp.com",
             projectId: "blocs-f21c0",
@@ -143,42 +140,56 @@
             messagingSenderId: "952216555812",
             appId: "1:952216555812:web:a37cdb673625845d0e23b1",
             measurementId: "G-JEYF5WZCTT"
-          };
+        };
 
-          // Initialize Firebase
-          const app = initializeApp(firebaseConfig);
-          const analytics = getAnalytics(app);
-    </script>
-    <script>
-        // Mot de passe pour accéder à la suppression
+        // Initialisation Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Mot de passe pour la suppression
         const adminPassword = "secret123";
 
+        // Charger les commentaires au démarrage
+        window.onload = function() {
+            loadComments();
+        };
+
         // Fonction pour soumettre un commentaire
-        function submitComment() {
+        async function submitComment() {
             const commentText = document.getElementById('comment-text').value;
 
             if (commentText.trim() !== "") {
-                // Créer un commentaire
-                const newComment = {
-                    author: "Utilisateur Anonyme",
-                    text: commentText
-                };
+                try {
+                    const newComment = {
+                        author: "Utilisateur Anonyme",
+                        text: commentText,
+                        timestamp: new Date().toISOString()
+                    };
 
-                // Ajouter le commentaire dans Firestore
-                db.collection("comments").add(newComment)
-                    .then(docRef => {
-                        displayComment(newComment, docRef.id, false);
-                        document.getElementById('comment-text').value = ""; // Vider le champ de texte après soumission
-                    })
-                    .catch(error => {
-                        console.error("Erreur lors de l'ajout du commentaire : ", error);
-                    });
+                    const docRef = await addDoc(collection(db, "comments"), newComment);
+                    displayComment(newComment, docRef.id, false);
+                    document.getElementById('comment-text').value = ""; // Vider le champ après soumission
+                } catch (error) {
+                    console.error("Erreur lors de l'ajout du commentaire : ", error);
+                }
             } else {
                 alert("Veuillez écrire un commentaire avant de soumettre.");
             }
         }
 
-        // Fonction pour afficher un commentaire dans la liste
+        // Fonction pour charger les commentaires
+        async function loadComments() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "comments"));
+                querySnapshot.forEach(doc => {
+                    displayComment(doc.data(), doc.id, false);
+                });
+            } catch (error) {
+                console.error("Erreur lors du chargement des commentaires : ", error);
+            }
+        }
+
+        // Fonction pour afficher un commentaire
         function displayComment(comment, commentId, canDelete) {
             const commentDiv = document.createElement('div');
             commentDiv.classList.add('comment');
@@ -191,7 +202,7 @@
             text.classList.add('text');
             text.textContent = comment.text;
 
-            // Si le propriétaire a validé le mot de passe, ajouter le bouton de suppression
+            // Si l'utilisateur est autorisé, ajouter le bouton de suppression
             if (canDelete) {
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Supprimer';
@@ -203,47 +214,37 @@
 
             commentDiv.appendChild(author);
             commentDiv.appendChild(text);
-
             document.getElementById('comment-list').appendChild(commentDiv);
         }
 
-        // Fonction pour valider le mot de passe avant de permettre la suppression
+        // Fonction pour valider le mot de passe
         function validatePassword() {
             const enteredPassword = document.getElementById('admin-password').value;
 
             if (enteredPassword === adminPassword) {
-                // Si le mot de passe est correct, autoriser la suppression des commentaires
-                const comments = document.querySelectorAll('.comment');
-                comments.forEach(comment => {
+                alert("Accès autorisé à la suppression des commentaires.");
+                document.querySelectorAll('.comment').forEach(comment => {
                     const deleteButton = comment.querySelector('button');
                     if (deleteButton) {
                         deleteButton.style.display = 'inline-block';
                     }
                 });
-                alert("Accès autorisé à la suppression des commentaires.");
             } else {
                 alert("Mot de passe incorrect.");
             }
         }
 
         // Fonction pour supprimer un commentaire
-        function deleteComment(commentId) {
-            db.collection("comments").doc(commentId).delete()
-                .then(() => {
-                    alert("Commentaire supprimé !");
-                    document.getElementById('comment-list').innerHTML = '';
-                    // Recharger les commentaires après suppression
-                    db.collection("comments").get().then(querySnapshot => {
-                        querySnapshot.forEach((doc, index) => {
-                            displayComment(doc.data(), doc.id, true); // Ajouter un bouton de suppression après validation du mot de passe
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error("Erreur lors de la suppression du commentaire : ", error);
-                });
+        async function deleteComment(commentId) {
+            try {
+                await deleteDoc(doc(db, "comments", commentId));
+                alert("Commentaire supprimé !");
+                document.getElementById('comment-list').innerHTML = '';
+                loadComments(); // Recharger les commentaires après suppression
+            } catch (error) {
+                console.error("Erreur lors de la suppression du commentaire : ", error);
+            }
         }
     </script>
-
 </body>
 </html>
