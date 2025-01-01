@@ -126,14 +126,35 @@
         <button onclick="validatePassword()">Valider</button>
     </div>
 
+    <!-- Ajouter Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+
     <script>
-        const adminPassword = "valitymdp"; 
+        // Configuration Firebase (remplacez avec les infos de votre propre projet Firebase)
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9gBmt2ECqY6oSSeLyo1RfsydfNIF3asE",
+            authDomain: "blocs-minecraft.firebaseapp.com",
+            projectId: "blocs-minecraft",
+            storageBucket: "blocs-minecraft.firebasestorage.app",
+            messagingSenderId: "700979880121",
+            appId: "1:700979880121:web:7900c876d281a252b37b68",
+            measurementId: "G-QGS48P65WX"
+          };
+
+        // Initialiser Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Mot de passe pour accéder à la suppression
+        const adminPassword = "secret123";
 
         // Charger les commentaires au démarrage de la page
         window.onload = function() {
-            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-            savedComments.forEach((comment, index) => {
-                displayComment(comment, index, false); // Afficher sans bouton de suppression par défaut
+            db.collection("comments").get().then(querySnapshot => {
+                querySnapshot.forEach((doc, index) => {
+                    displayComment(doc.data(), doc.id, false);
+                });
             });
         };
 
@@ -148,23 +169,22 @@
                     text: commentText
                 };
 
-                // Ajouter le commentaire à LocalStorage
-                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-                savedComments.push(newComment);
-                localStorage.setItem('comments', JSON.stringify(savedComments));
-
-                // Afficher le commentaire immédiatement
-                displayComment(newComment, savedComments.length - 1, false); // Pas de suppression avant validation du mot de passe
-
-                // Vider le champ de texte après soumission
-                document.getElementById('comment-text').value = "";
+                // Ajouter le commentaire dans Firestore
+                db.collection("comments").add(newComment)
+                    .then(docRef => {
+                        displayComment(newComment, docRef.id, false);
+                        document.getElementById('comment-text').value = ""; // Vider le champ de texte après soumission
+                    })
+                    .catch(error => {
+                        console.error("Erreur lors de l'ajout du commentaire : ", error);
+                    });
             } else {
                 alert("Veuillez écrire un commentaire avant de soumettre.");
             }
         }
 
         // Fonction pour afficher un commentaire dans la liste
-        function displayComment(comment, index, canDelete) {
+        function displayComment(comment, commentId, canDelete) {
             const commentDiv = document.createElement('div');
             commentDiv.classList.add('comment');
 
@@ -181,7 +201,7 @@
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Supprimer';
                 deleteButton.onclick = function() {
-                    deleteComment(index);
+                    deleteComment(commentId);
                 };
                 commentDiv.appendChild(deleteButton);
             }
@@ -198,13 +218,13 @@
 
             if (enteredPassword === adminPassword) {
                 // Si le mot de passe est correct, autoriser la suppression des commentaires
-                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-                document.getElementById('comment-list').innerHTML = ''; // Réinitialiser la liste
-
-                savedComments.forEach((comment, index) => {
-                    displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
+                const comments = document.querySelectorAll('.comment');
+                comments.forEach(comment => {
+                    const deleteButton = comment.querySelector('button');
+                    if (deleteButton) {
+                        deleteButton.style.display = 'inline-block';
+                    }
                 });
-
                 alert("Accès autorisé à la suppression des commentaires.");
             } else {
                 alert("Mot de passe incorrect.");
@@ -212,18 +232,21 @@
         }
 
         // Fonction pour supprimer un commentaire
-        function deleteComment(index) {
-            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-            savedComments.splice(index, 1); // Supprimer le commentaire du tableau
-
-            // Sauvegarder les commentaires modifiés dans le localStorage
-            localStorage.setItem('comments', JSON.stringify(savedComments));
-
-            // Recharger les commentaires pour mettre à jour l'affichage
-            document.getElementById('comment-list').innerHTML = '';
-            savedComments.forEach((comment, index) => {
-                displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
-            });
+        function deleteComment(commentId) {
+            db.collection("comments").doc(commentId).delete()
+                .then(() => {
+                    alert("Commentaire supprimé !");
+                    document.getElementById('comment-list').innerHTML = '';
+                    // Recharger les commentaires après suppression
+                    db.collection("comments").get().then(querySnapshot => {
+                        querySnapshot.forEach((doc, index) => {
+                            displayComment(doc.data(), doc.id, true); // Ajouter un bouton de suppression après validation du mot de passe
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error("Erreur lors de la suppression du commentaire : ", error);
+                });
         }
     </script>
 
