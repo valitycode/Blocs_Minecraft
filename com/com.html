@@ -113,6 +113,25 @@
             <textarea id="comment-text" placeholder="Écrivez votre commentaire ici..."></textarea>
             <button onclick="submitComment()">Soumettre le Commentaire</button>
         </div>
+        <script>
+           function submitComment() {
+               // Get the comment text
+               const commentText = document.getElementById('comment-text').value;
+
+               //  Do something with the comment, e.g., send it to a server
+               console.log("Comment submitted:", commentText);
+
+               // Clear the textarea (optional)
+               document.getElementById('comment-text').value = '';
+
+               // Example of adding to the comment list (you'll likely need more sophisticated logic):
+               const commentList = document.getElementById('comment-list');
+               const newComment = document.createElement('p');
+               newComment.textContent = commentText;
+               commentList.appendChild(newComment);
+
+           }
+       </script>
         <div class="comment-list" id="comment-list"></div>
     </div>
 
