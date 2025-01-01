@@ -125,7 +125,13 @@
         <input type="password" id="admin-password" placeholder="Entrez le mot de passe pour supprimer">
         <button onclick="validatePassword()">Valider</button>
     </div>
+    <script>
+        window.submitComment = submitComment;
+        window.validatePassword = validatePassword;
+        window.deleteComment = deleteComment;
 
+        window.onload = loadComments;
+    </script>
         <!-- Scripts Firebase et JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
@@ -215,12 +221,7 @@
             }
         }
 
-        // Rendre les fonctions accessibles globalement
-        window.submitComment = submitComment;
-        window.validatePassword = validatePassword;
-        window.deleteComment = deleteComment;
 
-        window.onload = loadComments;
     </script>
 </body>
 </html>
