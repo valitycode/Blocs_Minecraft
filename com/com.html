@@ -130,7 +130,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
-    
+
         const firebaseConfig = {
             apiKey: "AIzaSyALfZqZZZwOZVRzB8ZtJ05tD4ZshWLBfMg",
             authDomain: "blocs-f21c0.firebaseapp.com",
@@ -140,26 +140,20 @@
             appId: "1:952216555812:web:a37cdb673625845d0e23b1",
             measurementId: "G-JEYF5WZCTT"
         };
-    
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-    
+
         const adminPassword = "secret123";
-    
+
         async function submitComment() {
             const commentText = document.getElementById('comment-text').value;
-    
             if (commentText.trim() !== "") {
                 try {
-                    const newComment = {
-                        author: "Utilisateur Anonyme",
-                        text: commentText,
-                        timestamp: new Date().toISOString()
-                    };
-    
+                    const newComment = { author: "Utilisateur Anonyme", text: commentText };
                     const docRef = await addDoc(collection(db, "comments"), newComment);
                     displayComment(newComment, docRef.id, false);
-                    document.getElementById('comment-text').value = ""; // Vider le champ après soumission
+                    document.getElementById('comment-text').value = "";
                 } catch (error) {
                     console.error("Erreur lors de l'ajout du commentaire : ", error);
                 }
@@ -167,7 +161,7 @@
                 alert("Veuillez écrire un commentaire avant de soumettre.");
             }
         }
-    
+
         async function loadComments() {
             try {
                 const querySnapshot = await getDocs(collection(db, "comments"));
@@ -178,70 +172,55 @@
                 console.error("Erreur lors du chargement des commentaires : ", error);
             }
         }
-    
+
         function displayComment(comment, commentId, canDelete) {
             const commentDiv = document.createElement('div');
             commentDiv.classList.add('comment');
-    
             const author = document.createElement('div');
             author.classList.add('author');
             author.textContent = comment.author;
-    
             const text = document.createElement('div');
             text.classList.add('text');
             text.textContent = comment.text;
-    
             if (canDelete) {
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Supprimer';
-                deleteButton.onclick = function() {
+                deleteButton.onclick = function () {
                     deleteComment(commentId);
                 };
                 commentDiv.appendChild(deleteButton);
             }
-    
             commentDiv.appendChild(author);
             commentDiv.appendChild(text);
             document.getElementById('comment-list').appendChild(commentDiv);
         }
-    
-        function validatePassword() {
-            const enteredPassword = document.getElementById('admin-password').value;
-    
-            if (enteredPassword === adminPassword) {
-                alert("Accès autorisé à la suppression des commentaires.");
-                document.querySelectorAll('.comment').forEach(comment => {
-                    const deleteButton = comment.querySelector('button');
-                    if (deleteButton) {
-                        deleteButton.style.display = 'inline-block';
-                    }
-                });
-            } else {
-                alert("Mot de passe incorrect.");
-            }
-        }
-    
+
         async function deleteComment(commentId) {
             try {
                 await deleteDoc(doc(db, "comments", commentId));
                 alert("Commentaire supprimé !");
-                document.getElementById('comment-list').innerHTML = '';
-                loadComments(); // Recharger les commentaires après suppression
+                document.getElementById('comment-list').innerHTML = "";
+                loadComments();
             } catch (error) {
                 console.error("Erreur lors de la suppression du commentaire : ", error);
             }
         }
-    
-        // Charger les commentaires au démarrage
-        window.onload = function() {
-            loadComments();
-        };
-    
-        // Rendre les fonctions accessibles dans le contexte global
+
+        function validatePassword() {
+            const enteredPassword = document.getElementById('admin-password').value;
+            if (enteredPassword === adminPassword) {
+                alert("Accès autorisé.");
+            } else {
+                alert("Mot de passe incorrect.");
+            }
+        }
+
+        // Rendre les fonctions accessibles globalement
         window.submitComment = submitComment;
         window.validatePassword = validatePassword;
         window.deleteComment = deleteComment;
-    </script>
 
+        window.onload = loadComments;
+    </script>
 </body>
 </html>
