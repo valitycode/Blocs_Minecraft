@@ -1,30 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blocs 1.9.4</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="icon" href="../img/1.ico" type="image/x-icon">
-</head>
-<body>
-    <nav class="navbar">
-        <div><img class="logo" src="img/1.png"></div>
-        <div class="links">
-            <a href="../index.html">Accueil</a>
-            <a href="../base/base.html">Blocs de base</a>
-            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
-            <a href="../min/min.html">Blocs de minerais</a>
-            <a href="../const/const.html">Blocs de construction</a>
-            <a href="../dec/dec.html">Blocs décoratifs</a>
-            <a href="../mec/mec.html">Blocs mécaniques</a>
-            <a href="../nat/nat.html">Blocs naturels</a>
-            <a href="../red/red.html">Blocs de redstone</a>
-            <a href="../deco/deco.html">Blocs de décoration</a>
-            <a href="../div/div.html">Blocs divers</a>
-            <a href="../com/com.html">Commentaire</a>
-        </div>
-    </nav>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -107,17 +89,30 @@
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div><img class="logo" src="img/1.png" alt="Logo"></div>
+        <div class="links">
+            <a href="../index.html">Accueil</a>
+            <a href="../base/base.html">Blocs de base</a>
+            <a href="../veg/veg.html">Blocs de bois et feuilles</a>
+            <a href="../min/min.html">Blocs de minerais</a>
+            <a href="../const/const.html">Blocs de construction</a>
+            <a href="../dec/dec.html">Blocs décoratifs</a>
+            <a href="../mec/mec.html">Blocs mécaniques</a>
+            <a href="../nat/nat.html">Blocs naturels</a>
+            <a href="../red/red.html">Blocs de redstone</a>
+            <a href="../deco/deco.html">Blocs de décoration</a>
+            <a href="../div/div.html">Blocs divers</a>
+            <a href="../com/com.html">Commentaire</a>
+        </div>
+    </nav>
 
     <div class="comment-section">
         <h2>Écrire un Commentaire</h2>
-
-        <!-- Formulaire de commentaire -->
         <div class="comment-form">
             <textarea id="comment-text" placeholder="Écrivez votre commentaire ici..."></textarea>
             <button onclick="submitComment()">Soumettre le Commentaire</button>
         </div>
-
-        <!-- Liste des commentaires -->
         <div class="comment-list" id="comment-list"></div>
     </div>
 
@@ -125,14 +120,8 @@
         <input type="password" id="admin-password" placeholder="Entrez le mot de passe pour supprimer">
         <button onclick="validatePassword()">Valider</button>
     </div>
-    <script>
-        window.submitComment = submitComment;
-        window.validatePassword = validatePassword;
-        window.deleteComment = deleteComment;
 
-        window.onload = loadComments;
-    </script>
-        <!-- Scripts Firebase et JavaScript -->
+    <!-- Scripts Firebase et JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
@@ -141,7 +130,7 @@
             apiKey: "AIzaSyALfZqZZZwOZVRzB8ZtJ05tD4ZshWLBfMg",
             authDomain: "blocs-f21c0.firebaseapp.com",
             projectId: "blocs-f21c0",
-            storageBucket: "blocs-f21c0.firebasestorage.app",
+            storageBucket: "blocs-f21c0.appspot.com",
             messagingSenderId: "952216555812",
             appId: "1:952216555812:web:a37cdb673625845d0e23b1",
             measurementId: "G-JEYF5WZCTT"
@@ -149,7 +138,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         const adminPassword = "secret123";
 
         async function submitComment() {
@@ -221,7 +209,7 @@
             }
         }
 
-
+        window.onload = loadComments;
     </script>
 </body>
 </html>
