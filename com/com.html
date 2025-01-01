@@ -127,103 +127,118 @@
     </div>
 
     <script>
-        const adminPassword = "valitymdp"; 
+        const apiUrl = 'http://votre_serveur_distant:3000'; // Remplacez par l'URL de votre serveur Node.js
 
-        // Charger les commentaires au démarrage de la page
+        // Charger les commentaires lors du chargement de la page
         window.onload = function() {
-            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-            savedComments.forEach((comment, index) => {
-                displayComment(comment, index, false); // Afficher sans bouton de suppression par défaut
-            });
+            loadComments();
         };
 
-        // Fonction pour soumettre un commentaire
-        function submitComment() {
-            const commentText = document.getElementById('comment-text').value;
-
-            if (commentText.trim() !== "") {
-                // Créer un commentaire
-                const newComment = {
-                    author: "Utilisateur Anonyme",
-                    text: commentText
-                };
-
-                // Ajouter le commentaire à LocalStorage
-                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-                savedComments.push(newComment);
-                localStorage.setItem('comments', JSON.stringify(savedComments));
-
-                // Afficher le commentaire immédiatement
-                displayComment(newComment, savedComments.length - 1, false); // Pas de suppression avant validation du mot de passe
-
-                // Vider le champ de texte après soumission
-                document.getElementById('comment-text').value = "";
-            } else {
-                alert("Veuillez écrire un commentaire avant de soumettre.");
-            }
+        // Fonction pour charger les commentaires depuis l'API
+        function loadComments() {
+            fetch(apiUrl + '/comments')
+                .then(response => response.json())
+                .then(comments => {
+                    const commentsContainer = document.getElementById('comments-container');
+                    commentsContainer.innerHTML = ''; // Réinitialiser l'affichage
+                    comments.forEach(comment => {
+                        displayComment(comment);
+                    });
+                })
+                .catch(error => console.error('Erreur de chargement des commentaires:', error));
         }
 
         // Fonction pour afficher un commentaire dans la liste
-        function displayComment(comment, index, canDelete) {
+        function displayComment(comment) {
             const commentDiv = document.createElement('div');
             commentDiv.classList.add('comment');
-
-            const author = document.createElement('div');
-            author.classList.add('author');
-            author.textContent = comment.author;
-
-            const text = document.createElement('div');
-            text.classList.add('text');
-            text.textContent = comment.text;
-
-            // Si le propriétaire a validé le mot de passe, ajouter le bouton de suppression
-            if (canDelete) {
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Supprimer';
-                deleteButton.onclick = function() {
-                    deleteComment(index);
-                };
-                commentDiv.appendChild(deleteButton);
-            }
-
-            commentDiv.appendChild(author);
-            commentDiv.appendChild(text);
-
-            document.getElementById('comment-list').appendChild(commentDiv);
+            commentDiv.innerHTML = `
+                <div><strong>${comment.author}</strong>: ${comment.text}</div>
+                <button onclick="deleteComment(${comment.id})">Supprimer</button>
+            `;
+            document.getElementById('comments-container').appendChild(commentDiv);
         }
 
-        // Fonction pour valider le mot de passe avant de permettre la suppression
-        function validatePassword() {
-            const enteredPassword = document.getElementById('admin-password').value;
+        // Fonction pour soumettre un commentaire via l'API
+        function submitComment() {
+            const author = document.getElementById('author').value;
+            const commentText = document.getElementById('comment-text').value;
 
-            if (enteredPassword === adminPassword) {
-                // Si le mot de passe est correct, autoriser la suppression des commentaires
-                const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-                document.getElementById('comment-list').innerHTML = ''; // Réinitialiser la liste
+            if (author && commentText) {
+                const newComment = { author, text: commentText };
 
-                savedComments.forEach((comment, index) => {
-                    displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
-                });
-
-                alert("Accès autorisé à la suppression des commentaires.");
+                fetch(apiUrl + '/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newComment),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        loadComments(); // Recharger les commentaires après ajout
+                        document.getElementById('author').value = '';
+                        document.getElementById('comment-text').value = '';
+                    } else {
+                        alert('Erreur lors de l\'ajout du commentaire.');
+                    }
+                })
+                .catch(error => console.error('Erreur lors de l\'ajout du commentaire:', error));
             } else {
-                alert("Mot de passe incorrect.");
+                alert('Veuillez remplir le champ auteur et le commentaire.');
             }
         }
 
-        // Fonction pour supprimer un commentaire
-        function deleteComment(index) {
-            const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-            savedComments.splice(index, 1); // Supprimer le commentaire du tableau
+        // Fonction pour supprimer un commentaire via l'API
+        function deleteComment(commentId) {
+            const password = document.getElementById('admin-password').value;
+            if (password) {
+                fetch(apiUrl + '/validate-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        fetch(apiUrl + '/comments/' + commentId, {
+                            method: 'DELETE',
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                loadComments(); // Recharger les commentaires après suppression
+                            } else {
+                                alert('Erreur lors de la suppression du commentaire.');
+                            }
+                        })
+                        .catch(error => console.error('Erreur lors de la suppression:', error));
+                    } else {
+                        alert('Mot de passe incorrect.');
+                    }
+                })
+                .catch(error => console.error('Erreur de validation du mot de passe:', error));
+            } else {
+                alert('Veuillez entrer le mot de passe pour supprimer.');
+            }
+        }
 
-            // Sauvegarder les commentaires modifiés dans le localStorage
-            localStorage.setItem('comments', JSON.stringify(savedComments));
-
-            // Recharger les commentaires pour mettre à jour l'affichage
-            document.getElementById('comment-list').innerHTML = '';
-            savedComments.forEach((comment, index) => {
-                displayComment(comment, index, true); // Afficher les commentaires avec le bouton de suppression
-            });
+        // Fonction pour valider le mot de passe (pour suppression)
+        function validatePassword() {
+            const password = document.getElementById('admin-password').value;
+            if (password) {
+                fetch(apiUrl + '/validate-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Mot de passe correct, vous pouvez supprimer des commentaires.');
+                    } else {
+                        alert('Mot de passe incorrect.');
+                    }
+                })
+                .catch(error => console.error('Erreur de validation du mot de passe:', error));
+            } else {
+                alert('Veuillez entrer un mot de passe.');
+            }
         }
     </script>
 
