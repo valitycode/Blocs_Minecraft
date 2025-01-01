@@ -12,10 +12,10 @@ app.use(bodyParser.json());
 
 // Créer une connexion à la base de données MySQL distante
 const db = mysql.createConnection({
-    host: 'votre_hôte_mysql',    // Remplacez par l'adresse IP ou le domaine de votre serveur MySQL
-    user: 'votre_utilisateur',   // Remplacez par votre nom d'utilisateur MySQL
-    password: 'votre_mot_de_passe', // Remplacez par votre mot de passe MySQL
-    database: 'votre_base_de_donnees' // Remplacez par le nom de votre base de données
+    host: 'sql8.freesqldatabase.com',    // Remplacez par l'adresse IP ou le domaine de votre serveur MySQL
+    user: 'sql8755166',   // Remplacez par votre nom d'utilisateur MySQL
+    password: 'vmnF1LXpDq', // Remplacez par votre mot de passe MySQL
+    database: 'sql8755166' // Remplacez par le nom de votre base de données
 });
 
 // Connexion à la base de données
